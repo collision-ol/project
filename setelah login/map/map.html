@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lokasi Tempat Sampah Terdekat</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            padding-top: 20px;
+        }
+        .navbar {
+            background-color: #286648;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .navbar .navbar-brand, .navbar .nav-link {
+            color: white;
+        }
+        #map {
+            height: 500px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark px-3">
+        <span class="navbar-brand mb-0 h1">Lokasi Tempat Sampah</span>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/project/setelah login/beranda/beranda.html">Beranda</a></li>
+                <li class="nav-item"><a class="nav-link" href="/project/setelah login/acara/acara.html">Acara</a></li>
+                <li class="nav-item"><a class="nav-link" href="/project/setelah login/diskusi/diskusi.html">Diskusi</a></li>
+                <li class="nav-item"><a class="nav-link" href="/project/setelah login/map.html">Map</a></li>
+                <li class="nav-item"><a class="nav-link" href="/project/sebelum login/beranda.html">Keluar</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h2 class="text-center mb-4">Tempat Sampah Terdekat</h2>
+        <div id="map"></div>
+    </div>
+    
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
+    <script>
+        function initMap() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const userLocation = { lat: position.coords.latitude, lng: position.coords.longitude };
+                    const map = new google.maps.Map(document.getElementById("map"), {
+                        center: userLocation,
+                        zoom: 15
+                    });
+                    new google.maps.Marker({
+                        position: userLocation,
+                        map,
+                        title: "Lokasi Anda"
+                    });
+                    // Contoh lokasi tempat sampah
+                    const trashBins = [
+                        { lat: userLocation.lat + 0.001, lng: userLocation.lng + 0.001 },
+                        { lat: userLocation.lat - 0.0015, lng: userLocation.lng - 0.001 },
+                        { lat: userLocation.lat + 0.002, lng: userLocation.lng - 0.0015 }
+                    ];
+                    trashBins.forEach(bin => {
+                        new google.maps.Marker({
+                            position: bin,
+                            map,
+                            title: "Tempat Sampah"
+                        });
+                    });
+                }, () => {
+                    alert("Lokasi tidak dapat diakses");
+                });
+            } else {
+                alert("Geolokasi tidak didukung oleh browser Anda");
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
